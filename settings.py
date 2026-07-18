@@ -1,0 +1,19 @@
+HOST='0.0.0.0'
+PORT=8000
+API_KEY='fd265b15fa063c1bcab749a994de0aa6'
+API_SECRET='6e9215b36e26c3c6653225f8465cede7'
+URL="http://ws.audioscrobbler.com/2.0/"
+USERNAME='leeqn'
+POSTGRES_USERNAME='postgres'
+POSTGRES_PASSWORD='password'
+POSTGRES_HOST='localhost'
+POSTGRES_PORT='5432'
+POSTGRES=f'postgresql+psycopg2://{POSTGRES_USERNAME}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/songs'
+
+params={
+    'method':'user.getrecenttracks',
+    'format':'json',
+    'user':USERNAME,
+    'api_key':API_KEY,
+    'limit':50
+}

@@ -1,0 +1,8 @@
+sqlalchemy
+fastapi
+pydantic
+uvicorn
+musicbrainzngs
+pandas
+seaborn
+matplotlib
