@@ -42,7 +42,7 @@ The standalone analytics module queries the database to build custom data plots.
 The easiest way to run the backend and the PostgreSQL database is using Docker Compose.
 Clone the repository:
 
-git clone [https://github.com/your_username/SongChart.git](https://github.com/your_username/SongChart.git)
+git clone [https://github.com/leeqn/SongChart.git](https://github.com/your_username/SongChart.git)
 cd SongChart
 
 Build and start the containers in detached mode:

@@ -5,7 +5,7 @@ from datetime import datetime
 import settings
 from sqlalchemy import create_engine, text
 import uvicorn
-from services import get_tag
+from main.services import get_tag
 
 engine = create_engine(settings.POSTGRES)
 app = FastAPI()
@@ -28,7 +28,9 @@ def scrobble(track: TrackDetails):
 
     try:
         tag=get_tag(track.artist,track.title)
-        with engine.begin() as conn:
+        with engine.connect() as conn:
+            conn.execute(text('''CREATE TABLE IF NOT EXISTS songs 
+                            (title varchar (255), artist varchar (255), tag varchar(255), time timestamp, unique (title,artist,time) )'''))
             conn.execute(text('''
                               INSERT INTO songs (title, artist, tag, time)
                               VALUES(:title, :artist,:tag, :time)
@@ -39,12 +41,12 @@ def scrobble(track: TrackDetails):
                 'time': event_time,
             })
             conn.commit()
-            return {'status':'success','message`':'Track saved'}
+            return {'status':'success','message':'Track saved'}
 
     except Exception as exc:
         print(f"error: {exc}")
         raise HTTPException(status_code=500, detail=str(exc))
 
 if __name__ == "__main__":
-    uvicorn.run(app, host=settings.HOST, port=settings.PORT)
+    uvicorn.run('serv:app', host=settings.HOST, port=settings.PORT, reload=True)
 

@@ -1,7 +1,7 @@
 import argparse
-from visualisation import get_info
+from main.services import get_info, settings
 from sqlalchemy import create_engine
-import settings
+
 
 def main():
     parser = argparse.ArgumentParser(description='Sorting function')

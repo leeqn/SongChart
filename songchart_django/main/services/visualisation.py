@@ -2,10 +2,6 @@ import pandas as pd
 import seaborn as sns
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
-from sqlalchemy import create_engine
-import settings
-
-engine = create_engine(settings.POSTGRES)
 
 def get_info(engine,days=None,module=None):
     with engine.connect() as connection:
