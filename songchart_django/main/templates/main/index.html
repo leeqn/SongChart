@@ -89,7 +89,13 @@ SongChart — Music Analytics Ecosystem
 {% endblock %}
 
 {% block scripts %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<!-- Lucide Icons -->
 <script>lucide.createIcons();</script>
+
+<!-- Модули приложения -->
+<script src="{% static 'main/js/now_playing_bar.js' %}"></script>
 <script src="{% static 'main/js/app.js' %}"></script>
 {% endblock %}

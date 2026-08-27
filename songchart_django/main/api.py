@@ -1,41 +1,35 @@
 from ninja import NinjaAPI
-from django.db.models import Count
-from sqlalchemy import distinct
 from .models import Track
 from .schemas import TrackDetails
 from .services import services
+from django.utils import timezone
+from datetime import timedelta
 api = NinjaAPI(title='Song Chart API')
 
-def top_tracks():
-    top_tracks_qs = (
-        Track.objects.values('title','artist')
-        .annotate(plays=Count('id'))
-        .order_by('-plays')
-    )
-    top_tracks=[
-        {
-            'title':item['title'],
-            'artist':item['artist'],
-            'plays':item['plays']
+@api.get('/now-playing')
+def now_playing(request):
+    track=Track.objects.order_by('-id').first()
+    if not track:
+        return {
+            "is_playing": False,
+            "title": "No tracks played yet",
+            "artist": "Waiting for stream...",
+            "tag": "Offline",
+            "time": None,
         }
-        for item in top_tracks_qs
-    ]
-    return list(top_tracks)
+    is_live=False
+    if hasattr(track,'time') and track.time:
+        is_live=(timezone.now()-track.time)<timedelta(minutes=5)
 
-def recent_tracks():
-    recent_tracks_qs = (
-        Track.objects.order_by('-id')[:10]
-    )
-    recent_tracks=[
-        {
-        'title':item.title,
-        'artist':item.artist,
-        'tag':item.tag,
-        'time':(item.time.strftime('%I:%M %p'))
+    return{
+        "is_playing": is_live,
+        "title": track.title,
+        "artist": track.artist,
+        'tag': track.tag,
+        "time": track.time.strftime('%I:%M %p')
+        if hasattr(track, "time") and track.time
+        else "Just now"
         }
-        for item in recent_tracks_qs
-    ]
-    return list(recent_tracks)
 
 @api.post('/scrobble')
 def scrobble(request, track: TrackDetails):
@@ -51,10 +45,10 @@ def scrobble(request, track: TrackDetails):
 @api.get('/stats')
 def get_stats(request):
     return {
-        'recent_scrobbles': recent_tracks(),
+        'recent_scrobbles': services.recent_tracks(),
         'unique_artist': Track.objects.values('artist').distinct().count(),
-        'top_tracks': top_tracks(),
-        'total_scrobbles': Track.objects.values('title').count(),
+        'top_tracks': services.top_tracks(),
+        'total_scrobbles': Track.objects.count(),
         'recent': Track.objects.last().title if Track.objects else 'None',
         'tags': Track.objects.values('tag').distinct().count()
     }

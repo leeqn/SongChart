@@ -1,4 +1,37 @@
 import musicbrainzngs
+from django.db.models import Count
+from ..models import Track
+
+def top_tracks():
+    top_tracks_qs = (
+        Track.objects.values('title','artist')
+        .annotate(plays=Count('id'))
+        .order_by('-plays')
+    )
+    top_tracks=[
+        {
+            'title':item['title'],
+            'artist':item['artist'],
+            'plays':item['plays']
+        }
+        for item in top_tracks_qs
+    ]
+    return list(top_tracks)
+
+def recent_tracks():
+    recent_tracks_qs = (
+        Track.objects.order_by('-id')[:10]
+    )
+    recent_tracks=[
+        {
+        'title':item.title,
+        'artist':item.artist,
+        'tag':item.tag,
+        'time':(item.time.strftime('%I:%M %p'))
+        }
+        for item in recent_tracks_qs
+    ]
+    return list(recent_tracks)
 
 musicbrainzngs.set_useragent("SongChart-App", "1.0.0", "contact.danya@example.com")
 
