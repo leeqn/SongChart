@@ -21,10 +21,10 @@ SongChart — Music Analytics Ecosystem
         </div>
         <div>
           <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--accent); font-weight: 700;">Live Stream</div>
-          <h2 style="font-size: 1.25rem; font-weight: 700; color: #fff;">{{ current_track.title|default:"No active playback" }}</h2>
-          <p style="color: var(--text-muted); font-weight: 500;">{{ current_track.artist|default:"Waiting for stream..." }}</p>
+          <h2 style="font-size: 1.25rem; font-weight: 700; color: #fff;" id="title">{{ current_track.title|default:"No active playback" }}</h2>
+          <p style="color: var(--text-muted); font-weight: 500;" id="artist">{{ current_track.artist|default:"Waiting for stream..." }}</p>
           <div class="tags">
-            <span class="tag">#SoundCloud</span>
+            <span class="tag" id="tag">#SoundCloud</span>
           </div>
         </div>
       </div>
@@ -95,7 +95,8 @@ SongChart — Music Analytics Ecosystem
 <!-- Lucide Icons -->
 <script>lucide.createIcons();</script>
 
-<!-- Модули приложения -->
+<script src="{% static 'main/js/api.js' %}"></script>
 <script src="{% static 'main/js/now_playing_bar.js' %}"></script>
+<script src="{% static 'main/js/visualisation.js' %}"></script>
 <script src="{% static 'main/js/app.js' %}"></script>
 {% endblock %}
