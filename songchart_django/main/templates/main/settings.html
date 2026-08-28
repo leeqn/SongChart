@@ -1,28 +1,238 @@
-{% exclude 'main/layout.html' %}
-{% load staticm%}
-{% block aside %}
-  <aside>
-    <div>
-      <div class="logo">
-        <div class="logo-icon">
-          <i data-lucide="music-2" color="#fff" size="20"></i>
-        </div>
-        <span>SongChart</span>
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %}Settings — SongChart{% endblock %}
+{% block nav_settings %}active{% endblock %}
+
+{% block content %}
+<style>
+  .settings-container {
+    max-width: 800px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .settings-header {
+    margin-bottom: 8px;
+  }
+  .settings-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 6px 0;
+  }
+  .settings-header p {
+    color: #8e8f99;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+  .settings-card {
+    background-color: #181920;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+  .card-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .card-title-row h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+  }
+  .card-desc {
+    color: #8e8f99;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin: 0 0 20px 0;
+  }
+  .api-key-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #0e0f14;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px 16px;
+  }
+  .api-key-text {
+    flex: 1;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    color: #ff884d;
+    user-select: all;
+    word-break: break-all;
+  }
+  .btn-copy {
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .btn-copy:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: #ff5500;
+  }
+  .btn-regen {
+    background: rgba(255, 68, 68, 0.1);
+    color: #ff5555;
+    border: 1px solid rgba(255, 68, 68, 0.25);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .btn-regen:hover {
+    background: rgba(255, 68, 68, 0.2);
+    color: #ff7777;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+  .form-group label {
+    font-size: 0.85rem;
+    color: #cfd0d6;
+    font-weight: 500;
+  }
+  .form-input {
+    background: #0e0f14;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus {
+    border-color: #ff5500;
+  }
+  .btn-primary {
+    background: #ff5500;
+    color: #ffffff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover {
+    background: #ff6a1a;
+  }
+  .toast-msg {
+    background: rgba(0, 200, 83, 0.15);
+    border: 1px solid rgba(0, 200, 83, 0.3);
+    color: #00e676;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+  }
+</style>
+
+<div class="settings-container">
+  <div class="settings-header">
+    <h1>Settings</h1>
+    <p>Manage your account preferences, scrobbler credentials, and API connections</p>
+  </div>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="toast-msg">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Карточка API-ключа -->
+  <div class="settings-card">
+    <div class="card-title-row">
+      <i data-lucide="key" size="20" color="#ff5500"></i>
+      <h3>Scrobbler API Key</h3>
+    </div>
+    <p class="card-desc">
+      Use this unique token in your browser extension to sync your listens with SongChart.
+    </p>
+
+    <div class="api-key-box">
+      <span class="api-key-text" id="apiKeyDisplay">{{ profile.api_key|default:"No key generated" }}</span>
+      <button type="button" class="btn-copy" onclick="copyApiKey()">
+        <span id="copyBtnText">Copy</span>
+      </button>
+    </div>
+
+    <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="regenerate_token">
+        <button type="submit" class="btn-regen" onclick="return confirm('Regenerate key? Your browser extension will need to be updated.');">
+          Regenerate Key
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Карточка профиля -->
+  <div class="settings-card">
+    <div class="card-title-row">
+      <i data-lucide="user" size="20" color="#ff5500"></i>
+      <h3>Account Profile</h3>
+    </div>
+    <p class="card-desc">Your basic account credentials</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="update_profile">
+
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" class="form-input" value="{{ request.user.username }}" disabled style="opacity: 0.5; cursor: not-allowed;">
       </div>
 
-      <ul class="nav-list">
-        <li class="nav-item"><a href="http://127.0.0.1:8000/#"><i data-lucide="layout-dashboard" size="18"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="http://127.0.0.1:8000/scrobbles"><i data-lucide="disc" size="18"></i> Scrobble Log</a></li>
-        <li class="nav-item"><a href="http://127.0.0.1:8000/analytics"><i data-lucide="bar-chart-2" size="18"></i> Analytics</a></li>
-        <li class="nav-item active"><a href="#"><i data-lucide="http://127.0.0.1:8000/settings" size="18"></i> Settings</a></li>
-      </ul>
-    </div>
-    <div class="status-badge">
-      <div class="status-dot"></div>
-      <div>
-        <div style="font-size: 0.85rem; font-weight: 600;">Extension Active</div>
-        <div style="font-size: 0.75rem; color: var(--text-muted);">SoundCloud Monitor</div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" class="form-input" value="{{ request.user.email|default:'' }}">
       </div>
-    </div>
-  </aside>
+
+      <div style="margin-top: 10px;">
+        <button type="submit" class="btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<!-- Lucide Icons -->
+<script>lucide.createIcons();</script>
+
+<script>
+  function copyApiKey() {
+    const key = document.getElementById('apiKeyDisplay').innerText;
+    navigator.clipboard.writeText(key).then(() => {
+      const btn = document.getElementById('copyBtnText');
+      btn.innerText = 'Copied!';
+      setTimeout(() => { btn.innerText = 'Copy'; }, 2000);
+    });
+  }
+</script>
 {% endblock %}

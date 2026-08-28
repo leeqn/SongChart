@@ -1,0 +1,99 @@
+.auth-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-main, #0c0d12);
+      padding: 24px;
+    }
+    .auth-card {
+      background: var(--bg-card, #181920);
+      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+      border-radius: 16px;
+      width: 100%;
+      max-width: 420px;
+      padding: 36px 32px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    .auth-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .auth-header .logo-icon {
+      margin: 0 auto 16px;
+    }
+    .auth-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .auth-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted, #8e8f99);
+    }
+    .form-group {
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #cfd0d6;
+    }
+    .auth-input {
+      width: 100%;
+      background: #111217;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .auth-input:focus {
+      border-color: var(--accent, #ff5500);
+    }
+    .btn-submit {
+      width: 100%;
+      background: var(--accent, #ff5500);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-submit:hover {
+      background: #ff6a1a;
+    }
+    .btn-submit:active {
+      transform: scale(0.99);
+    }
+    .auth-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.85rem;
+      color: var(--text-muted, #8e8f99);
+    }
+    .auth-footer a {
+      color: var(--accent, #ff5500);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .form-errors {
+      background: rgba(255, 68, 68, 0.1);
+      border: 1px solid rgba(255, 68, 68, 0.3);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      color: #ff6b6b;
+      font-size: 0.85rem;
+      list-style: none;
+    }
