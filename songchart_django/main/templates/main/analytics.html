@@ -1,0 +1,57 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block aside %}
+  <aside>
+    <div>
+      <div class="logo">
+        <div class="logo-icon">
+          <i data-lucide="music-2" color="#fff" size="20"></i>
+        </div>
+        <span>SongChart</span>
+      </div>
+
+      <ul class="nav-list">
+        <li class="nav-item"><a href="http://127.0.0.1:8000/#"><i data-lucide="layout-dashboard" size="18"></i> Dashboard</a></li>
+        <li class="nav-item"><a href="http://127.0.0.1:8000/scrobbles"><i data-lucide="disc" size="18"></i> Scrobble Log</a></li>
+        <li class="nav-item active"><a href="http://127.0.0.1:8000/analytics"><i data-lucide="bar-chart-2" size="18"></i> Analytics</a></li>
+        <li class="nav-item"><a href="#"><i data-lucide="http://127.0.0.1:8000/settings" size="18"></i> Settings</a></li>
+      </ul>
+    </div>
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      <div>
+        <div style="font-size: 0.85rem; font-weight: 600;">Extension Active</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">SoundCloud Monitor</div>
+      </div>
+    </div>
+  </aside>
+{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 480px)); gap: 20px;">
+  <section class="chart-card" style="background: #18181b; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); padding: 20px;">
+    <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 16px; font-weight: 600;">Top Tracks Distribution</h3>
+    <div style="position: relative; height: 260px;">
+      <canvas id="topTracksChart"></canvas>
+    </div>
+  </section>
+  <section class="chart-card" style="max-width: 600px; background: #18181b; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); padding: 20px;">
+    <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 16px; font-weight: 600;">
+    Listening Activity by Hour
+    </h3>
+    <div style="position: relative; height: 260px; width: 100%;">
+      <canvas id="hourlyHistChart"></canvas>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Chart.js & Lucide -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>lucide.createIcons();</script>
+
+<script src="{% static 'main/js/api.js' %}"></script>
+<script src="{% static 'main/js/analytics.js' %}"></script>
+{% endblock %}

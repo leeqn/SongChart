@@ -1,7 +1,7 @@
 // main/static/main/js/components/visualisation.js
 let topTracksChartInstance = null;
 
-function updateScrobblesTable(tracks) {
+function updateScrobblesTable(tracks, limit=null) {
   const tbody = document.getElementById('scrobbles-table-body');
   if (!tbody) return;
 
@@ -9,8 +9,9 @@ function updateScrobblesTable(tracks) {
     tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 24px;">No scrobbles recorded yet</td></tr>`;
     return;
   }
+const displayTracks = limit ? tracks.slice(0, limit) : tracks;
 
-  tbody.innerHTML = tracks.map(t => `
+  tbody.innerHTML = displayTracks.map(t => `
     <tr>
       <td style="font-weight: 600; color: #fff;">${t.title}</td>
       <td>${t.artist}</td>

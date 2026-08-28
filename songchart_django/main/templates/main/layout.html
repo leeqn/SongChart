@@ -17,7 +17,7 @@
     <title>SongChart</title>
 </head>
 <body>
-
+{% block aside %}
   <!-- Sidebar -->
   <aside>
     <div>
@@ -29,13 +29,12 @@
       </div>
 
       <ul class="nav-list">
-        <li class="nav-item active"><a href="#"><i data-lucide="layout-dashboard" size="18"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="#"><i data-lucide="disc" size="18"></i> Scrobble Log</a></li>
-        <li class="nav-item"><a href="#"><i data-lucide="bar-chart-2" size="18"></i> Analytics</a></li>
-        <li class="nav-item"><a href="#"><i data-lucide="settings" size="18"></i> Settings</a></li>
+        <li class="nav-item active"><a href="http://127.0.0.1:8000/#"><i data-lucide="layout-dashboard" size="18"></i> Dashboard</a></li>
+        <li class="nav-item"><a href="http://127.0.0.1:8000/scrobbles"><i data-lucide="disc" size="18"></i> Scrobble Log</a></li>
+        <li class="nav-item"><a href="http://127.0.0.1:8000/analytics"><i data-lucide="bar-chart-2" size="18"></i> Analytics</a></li>
+        <li class="nav-item"><a href="#"><i data-lucide="http://127.0.0.1:8000/settings" size="18"></i> Settings</a></li>
       </ul>
     </div>
-
     <div class="status-badge">
       <div class="status-dot"></div>
       <div>
@@ -44,9 +43,15 @@
       </div>
     </div>
   </aside>
+{% endblock %}
   {% block content %}
     {% endblock %}
 {% block scripts %}
+  <!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<!-- Lucide Icons -->
+<script>lucide.createIcons();</script>
 {% endblock %}
 </body>
 </html>

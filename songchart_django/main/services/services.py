@@ -2,9 +2,9 @@ import musicbrainzngs
 from django.db.models import Count
 from ..models import Track
 
-def top_tracks():
+def top_tracks(user_tracks):
     top_tracks_qs = (
-        Track.objects.values('title','artist')
+        user_tracks.values('title','artist')
         .annotate(plays=Count('id'))
         .order_by('-plays')
     )
@@ -18,9 +18,9 @@ def top_tracks():
     ]
     return list(top_tracks)
 
-def recent_tracks():
+def recent_tracks(limit: int = 6, user_tracks: list = None):
     recent_tracks_qs = (
-        Track.objects.order_by('-id')[:10]
+        user_tracks.order_by('-id')[:limit]
     )
     recent_tracks=[
         {

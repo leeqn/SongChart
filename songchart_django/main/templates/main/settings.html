@@ -1,0 +1,28 @@
+{% exclude 'main/layout.html' %}
+{% load staticm%}
+{% block aside %}
+  <aside>
+    <div>
+      <div class="logo">
+        <div class="logo-icon">
+          <i data-lucide="music-2" color="#fff" size="20"></i>
+        </div>
+        <span>SongChart</span>
+      </div>
+
+      <ul class="nav-list">
+        <li class="nav-item"><a href="http://127.0.0.1:8000/#"><i data-lucide="layout-dashboard" size="18"></i> Dashboard</a></li>
+        <li class="nav-item"><a href="http://127.0.0.1:8000/scrobbles"><i data-lucide="disc" size="18"></i> Scrobble Log</a></li>
+        <li class="nav-item"><a href="http://127.0.0.1:8000/analytics"><i data-lucide="bar-chart-2" size="18"></i> Analytics</a></li>
+        <li class="nav-item active"><a href="#"><i data-lucide="http://127.0.0.1:8000/settings" size="18"></i> Settings</a></li>
+      </ul>
+    </div>
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      <div>
+        <div style="font-size: 0.85rem; font-weight: 600;">Extension Active</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">SoundCloud Monitor</div>
+      </div>
+    </div>
+  </aside>
+{% endblock %}

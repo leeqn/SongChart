@@ -1,7 +1,7 @@
 // main/static/main/js/api.js
-async function fetchDashboardStats() {
+async function fetchDashboardStats(limit = 10) {
   try {
-    const res = await fetch('/api/stats');
+    const res = await fetch(`/api/stats?limit=${limit}`);
     if (!res.ok) throw new Error(`HTTP: ${res.status}`);
     return await res.json();
   } catch (err) {
