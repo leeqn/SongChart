@@ -1,6 +1,5 @@
 import musicbrainzngs
 from django.db.models import Count
-from ..models import Track
 
 def top_tracks(user_tracks):
     top_tracks_qs = (

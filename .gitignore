@@ -1,8 +1,11 @@
 .venv/
 venv/
-env/
-pgdata/
-.idea/
 __pycache__/
+*.pyc
+db.sqlite3
+.env
+staticfiles/
+pgdata/
+.idea//
 .cache/
 .DS_Store/

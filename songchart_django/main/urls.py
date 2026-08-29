@@ -9,7 +9,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index' ),
     path('api/',api.urls),
-    path('scrobbles/',views.scrobbles,name='scrobbles'),
+    path('scrobble/',views.scrobble,name='scrobble'),
     path('analytics/',views.analytics,name='analytics'),
     path('settings/',views.settings_view,name='settings'),
     path('register/', views.register_view, name='register'),

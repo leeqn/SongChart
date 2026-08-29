@@ -14,25 +14,48 @@ function getTrackDetails() {
             }
         }
     }
+
     if (title && artist) {
         return { title: title.trim(), artist: artist.trim() };
     }
     return null;
 }
 
+// Получение настроек из chrome.storage
+function getStoredConfig() {
+    return new Promise((resolve) => {
+        chrome.storage.sync.get(['songchart_server', 'songchart_api_key'], (items) => {
+            resolve({
+                serverUrl: (items.songchart_server || 'http://127.0.0.1:8000').replace(/\/+$/, ''),
+                apiKey: items.songchart_api_key || ''
+            });
+        });
+    });
+}
+
 async function sendScrobbleToServer(trackData) {
     try {
-        console.log('[SongChart] Sending data directly to server:', trackData);
-        const response = await fetch('http://127.0.0.1:8000/api/scrobble', {
+        const { serverUrl, apiKey } = await getStoredConfig();
+
+        if (!apiKey) {
+            console.warn('[SongChart] Scrobble skipped: API Key is missing. Open the extension popup to set it.');
+            return;
+        }
+
+        console.log('[SongChart] Sending data to server:', trackData);
+
+        const response = await fetch(`${serverUrl}/api/scrobble`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-API-Key': apiKey  // Передача персонального API-ключа
             },
             body: JSON.stringify(trackData)
         });
 
         if (!response.ok) {
-            throw new Error(`Server responded with status: ${response.status}`);
+            const errDetails = await response.text();
+            throw new Error(`Server responded with status: ${response.status} - ${errDetails}`);
         }
 
         const result = await response.json();
@@ -43,7 +66,7 @@ async function sendScrobbleToServer(trackData) {
 }
 
 let currentTrackKey = '';
-console.log('[SongChart DEBUG] content.js successfully initialized!');
+console.log('[SongChart DEBUG] content.js successfully initialized with API Key support!');
 
 setInterval(() => {
     const track = getTrackDetails();
@@ -55,15 +78,18 @@ setInterval(() => {
             console.log("[SongChart] New track detected:", trackKey);
 
             setTimeout(async () => {
+                // Повторная проверка актуальности трека перед отправкой
+                const currentTrack = getTrackDetails();
+                if (currentTrack && `${currentTrack.artist}-${currentTrack.title}` === currentTrackKey) {
+                    const payload = {
+                        title: track.title,
+                        artist: track.artist,
+                        time: Math.floor(Date.now() / 1000),
+                    };
 
-                const payload = {
-                    title: track.title,
-                    artist: track.artist,
-                    time: Math.floor(Date.now() / 1000),
-                };
-
-                await sendScrobbleToServer(payload);
-            }, 2000);
+                    await sendScrobbleToServer(payload);
+                }
+            }, 3000);
         }
     }
 }, 10000);
