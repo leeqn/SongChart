@@ -1,9 +1,0 @@
-sqlalchemy
-fastapi
-pydantic
-uvicorn
-musicbrainzngs
-pandas
-seaborn
-matplotlib
-psycopg2-binary>=2.9.0
