@@ -43,5 +43,5 @@ typing-inspection==0.4.2
 typing_extensions==4.16.0
 tzdata==2026.2
 urllib3==2.6.3
-whitenoise==6.11.0
+whitenoise>=6.5.0
 zipp==3.23.1
