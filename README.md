@@ -3,6 +3,7 @@
 **SongChart** is a real-time music analytics and track scrobbling platform (with SoundCloud support). It tracks your music listening habits, enriches track metadata, and provides real-time dashboard analytics.
 
 The project consists of two core components:
+
 1. **Chrome Extension** — A lightweight browser extension that monitors active media playback in real time and sends scrobble payloads to the backend.
 2. **Django Backend & Dashboard** — A web application providing REST APIs for ingestion, track/artist data processing, and an interactive analytics dashboard.
 
@@ -28,50 +29,72 @@ SongChart/
 │   ├── manifest.json       # Extension configuration
 │   ├── content.js          # SoundCloud player scraper & observer
 │   ├── popup.html          # Extension popup UI
-│   └── popup.js            # API key setup and connection logic
+│   └── popup.js             # API key setup and connection logic
 ├── songchart_django/       # Django backend application
-│   ├── main/               # Core application (models, views, API, templates, static)
-│   ├── songchart_django/   # Project settings (settings.py, urls.py, wsgi.py)
+│   ├── main/                # Core application (models, views, API, templates, static)
+│   ├── songchart_django/    # Project settings (settings.py, urls.py, wsgi.py)
 │   ├── manage.py
 │   └── requirements.txt
 ├── requirements.txt        # Root dependencies for Azure Oryx builder
 └── README.md
+```
 
+---
 
-⚙️ Local Development Setup
+## ⚙️ Local Development Setup
 
-1. Clone the repository
-Bash
-git clone [https://github.com/leeqn/SongChart.git](https://github.com/leeqn/SongChart.git)
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/leeqn/SongChart.git
 cd SongChart
+```
 
-2. Create and activate a virtual environment
-Bash
+### 2. Create and activate a virtual environment
+
+```bash
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
+```
 
-3. Configure environment variables
-Create a .env file inside the songchart_django/ directory:
+### 3. Configure environment variables
+
+Create a `.env` file inside the `songchart_django/` directory:
+
+```
 DJANGO_SECRET_KEY=your-secret-key-here
 DJANGO_DEBUG=True
 ALLOWED_HOSTS=127.0.0.1,localhost
+```
 
-4. Run migrations and collect static files
-Bash
+### 4. Run migrations and collect static files
+
+```bash
 cd songchart_django
 python manage.py migrate
 python manage.py collectstatic --noinput
 python manage.py createsuperuser  # Optional: create admin account
+```
 
-5. Start the development server
-Bash
+### 5. Start the development server
+
+```bash
 python manage.py runserver
-Access the dashboard at http://127.0.0.1:8000/.
+```
 
-☁️ Azure Deployment Configuration
+Access the dashboard at [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
+
+---
+
+## ☁️ Azure Deployment Configuration
+
 This repository is configured for automated deployment to Azure App Service:
-Startup Command:
-Bash
+
+**Startup Command:**
+
+```bash
 gunicorn --chdir songchart_django --bind=0.0.0.0:8000 --timeout 600 songchart_django.wsgi:application
-Static Assets: Handled in production via WhiteNoise (STORAGES / STATIC_ROOT), eliminating the need for a separate reverse proxy.
+```
+
+**Static Assets:** Handled in production via WhiteNoise (`STORAGES` / `STATIC_ROOT`), eliminating the need for a separate reverse proxy.
