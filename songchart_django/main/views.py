@@ -46,7 +46,7 @@ def register_view(request):
             user = form.save()
             UserProfile.objects.get_or_create(user=user)
             login(request, user)
-            return redirect('/')
+            return redirect('settings')
     else:
         form = RegisterForm()
 
@@ -61,7 +61,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('index')
+            return redirect('settings')
         else:
             messages.error(request, 'Неверное имя пользователя или пароль')
     else:
