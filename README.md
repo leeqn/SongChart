@@ -1,4 +1,4 @@
-# 🎵 SongChart
+# 🎵 SongChart https://songchart-app.azurewebsites.net/
 
 **SongChart** is a real-time music analytics and track scrobbling platform (with SoundCloud support). It tracks your music listening habits, enriches track metadata, and provides real-time dashboard analytics.
 
