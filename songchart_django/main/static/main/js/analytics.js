@@ -182,8 +182,13 @@ async function loadHourlyStats() {
     const res = await fetch('/api/analytics');
     if (!res.ok) return;
     const data = await res.json();
+
     renderHourlyHistPlot(data.labels, data.counts);
-    renderTopArtistsChart(data.artist_labels, data.artist_counts);
+
+    const artistLabels = data['top-artists'] || data.artist_labels || [];
+    const artistCounts = data['artists-counts'] || data.artist_counts || [];
+
+    renderTopArtistsChart(artistLabels, artistCounts);
   } catch (err) {
     console.error('[Analytics Load Error]:', err);
   }
