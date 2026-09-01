@@ -183,7 +183,7 @@ async function loadHourlyStats() {
     if (!res.ok) return;
     const data = await res.json();
     renderHourlyHistPlot(data.labels, data.counts);
-    renderTopArtistsChart(data.artist_labels,data.counts);
+    renderTopArtistsChart(data.artist_labels,data.artist_counts);
   } catch (err) {
     console.error(err);
   }

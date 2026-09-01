@@ -75,6 +75,7 @@ def get_analytics(request):
     )
 
     top_artists=[item['artist'] for item in top_artists_qs]
+    artist_counts=[item['artist__count'] for item in top_artists_qs]
 
     local_tz = timezone.get_current_timezone()
     hourly_tracks = (
@@ -92,6 +93,7 @@ def get_analytics(request):
     return {
         "labels": [f"{h:02d}:00" for h in range(24)],
         "counts": data_hourly,
+        "artists-counts": artist_counts,
         "top-artists": top_artists,
     }
 
