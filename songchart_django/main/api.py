@@ -60,7 +60,6 @@ def scrobble(request, track: TrackDetails):
         "status": "created"
     }
 @api.get('/analytics')
-@api.get('/analytics')
 def get_analytics(request):
     user = request.user if request.user.is_authenticated else getattr(request, 'auth', None)
 
@@ -69,11 +68,13 @@ def get_analytics(request):
 
     user_tracks = Track.objects.filter(user=user)
 
-    top_tags = list(
-        user_tracks.values('tag')
-        .annotate(tag__count=Count('tag'))
-        .order_by('-tag__count')[:5]
+    top_artists = list(
+        user_tracks.values('artist')
+        .annotate(artist__count=Count('artist'))
+        .order_by('-artist__count')[:5]
     )
+
+    top_artists=[item['artist'] for item in top_artists]
 
     local_tz = timezone.get_current_timezone()
     hourly_tracks = (
@@ -91,7 +92,7 @@ def get_analytics(request):
     return {
         "labels": [f"{h:02d}:00" for h in range(24)],
         "counts": data_hourly,
-        "top-tags": top_tags
+        "top-artists": top_artists,
     }
 
 @api.get('/now-playing')

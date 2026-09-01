@@ -1,6 +1,7 @@
 // main/static/main/js/analytics.js
 let hourlyChartInstance = null;
 let topTracksChartInstance = null;
+let topArtistsChartInstance = null;
 
 function circleChart(tracks, limit = 8) {
   const canvas = document.getElementById('topTracksChart');
@@ -120,12 +121,69 @@ function renderHourlyHistPlot(labels, counts) {
   });
 }
 
+
+function renderTopArtistsChart(artist_labels, counts) {
+  const canvas = document.getElementById('topArtistsChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+
+  const labels = artist_labels || [];
+  const data = counts || [];
+
+  if (topArtistsChartInstance) {
+    topArtistsChartInstance.data.labels = labels;
+    topArtistsChartInstance.data.datasets[0].data = data;
+    topArtistsChartInstance.update('none');
+    return;
+  }
+
+  const ctx = canvas.getContext('2d');
+  topArtistsChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Scrobbles',
+        data: data,
+        backgroundColor: 'rgba(255, 122, 51, 0.75)',
+        borderColor: '#ff7a33',
+        borderWidth: 1,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y', // Горизонтальный график
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (context) => ` ${context.raw} scrobbles`
+          }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: { color: '#a0a0a0', precision: 0 },
+          grid: { color: 'rgba(255, 255, 255, 0.05)' }
+        },
+        y: {
+          ticks: { color: '#a0a0a0', font: { size: 11 } },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
 async function loadHourlyStats() {
   try {
     const res = await fetch('/api/analytics');
     if (!res.ok) return;
     const data = await res.json();
     renderHourlyHistPlot(data.labels, data.counts);
+    renderTopArtistsChart(data.artist_labels,data.counts);
   } catch (err) {
     console.error(err);
   }
