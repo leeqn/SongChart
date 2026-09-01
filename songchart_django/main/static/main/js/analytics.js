@@ -126,9 +126,12 @@ function renderTopArtistsChart(artist_labels, counts) {
   const canvas = document.getElementById('topArtistsChart');
   if (!canvas || typeof Chart === 'undefined') return;
 
+  const labels = artist_labels || [];
+  const data = counts || [];
+
   if (topArtistsChartInstance) {
-    topArtistsChartInstance.data.labels = labels;
-    topArtistsChartInstance.data.datasets[0].data = data;
+    topArtistsChartInstance.data.labels = artist_labels;
+    topArtistsChartInstance.data.datasets[0].data = counts;
     topArtistsChartInstance.update('none');
     return;
   }
@@ -180,23 +183,29 @@ async function loadHourlyStats() {
     if (!res.ok) return;
     const data = await res.json();
     renderHourlyHistPlot(data.labels, data.counts);
-    renderTopArtistsChart(data.artist_labels,data.artist_counts);
+    renderTopArtistsChart(data.artist_labels, data.artist_counts);
   } catch (err) {
-    console.error(err);
+    console.error('[Analytics Load Error]:', err);
+  }
+}
+
+async function loadTopTracks() {
+  if (typeof fetchDashboardStats !== 'function') return;
+  try {
+    const data = await fetchDashboardStats(10);
+    if (data && data.top_tracks) {
+      circleChart(data.top_tracks, 8);
+    }
+  } catch (err) {
+    console.error('[Top Tracks Load Error]:', err);
   }
 }
 
 async function refreshAnalytics() {
-  try {
-    const data = await fetchDashboardStats(10);
-    if (!data) return;
-
-    loadHourlyStats();
-
-    circleChart(data.top_tracks, 8);
-  } catch (err) {
-    console.error('[Analytics Error]:', err);
-  }
+  await Promise.allSettled([
+    loadHourlyStats(),
+    loadTopTracks()
+  ]);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
