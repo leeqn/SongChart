@@ -68,13 +68,13 @@ def get_analytics(request):
 
     user_tracks = Track.objects.filter(user=user)
 
-    top_artists = list(
+    top_artists_qs = list(
         user_tracks.values('artist')
         .annotate(artist__count=Count('artist'))
         .order_by('-artist__count')[:5]
     )
 
-    top_artists=[item['artist'] for item in top_artists]
+    top_artists=[item['artist'] for item in top_artists_qs]
 
     local_tz = timezone.get_current_timezone()
     hourly_tracks = (

@@ -4,29 +4,33 @@
 {% block nav_analytics %}active{% endblock %}
 
 {% block content %}
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 480px)); gap: 20px;">
-  <section class="chart-card" style="background: #18181b; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); padding: 20px;">
-    <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 16px; font-weight: 600;">Top Tracks Distribution</h3>
-    <div style="position: relative; height: 260px;">
+<link rel="stylesheet" href="{% static 'main/css/analytics.css' %}">
+<div class="analytics-grid">
+
+  <!-- 1. Top Tracks Distribution -->
+  <section class="chart-card card-tracks">
+    <h3 class="chart-title">Top Tracks Distribution</h3>
+    <div class="chart-container">
       <canvas id="topTracksChart"></canvas>
     </div>
   </section>
-  <section class="chart-card" style="max-width: 600px; background: #18181b; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); padding: 20px;">
-    <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 16px; font-weight: 600;">
-    Listening Activity by Hour
-    </h3>
-    <div style="position: relative; height: 260px; width: 100%;">
+
+  <!-- 2. Listening Activity by Hour -->
+  <section class="chart-card card-hourly">
+    <h3 class="chart-title">Listening Activity by Hour</h3>
+    <div class="chart-container">
       <canvas id="hourlyHistChart"></canvas>
     </div>
   </section>
-  <section class="chart-card" style="max-width: 600px; background: #18181b; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); padding: 20px;">
-      <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 16px; font-weight: 600;">
-    Top Artists by listening
-    </h3>
-    <div style="position: relative; height: 260px; width: 100%;">
+
+  <!-- 3. Top Artists by listening -->
+  <section class="chart-card card-artists">
+    <h3 class="chart-title">Top Artists by Listening</h3>
+    <div class="chart-container artists-container">
       <canvas id="topArtistsChart"></canvas>
     </div>
   </section>
+
 </div>
 {% endblock %}
 
