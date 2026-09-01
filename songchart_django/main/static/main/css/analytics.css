@@ -53,10 +53,10 @@
           grid-template-areas:
         "tracks"
         "hourly"
-        "artists";
       }
 
       .artists-container {
           min-height: 320px;
+          max-width: 400 px;
       }
   }

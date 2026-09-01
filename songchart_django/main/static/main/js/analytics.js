@@ -126,9 +126,6 @@ function renderTopArtistsChart(artist_labels, counts) {
   const canvas = document.getElementById('topArtistsChart');
   if (!canvas || typeof Chart === 'undefined') return;
 
-  const labels = artist_labels || [];
-  const data = counts || [];
-
   if (topArtistsChartInstance) {
     topArtistsChartInstance.data.labels = labels;
     topArtistsChartInstance.data.datasets[0].data = data;
@@ -151,7 +148,7 @@ function renderTopArtistsChart(artist_labels, counts) {
       }]
     },
     options: {
-      indexAxis: 'y', // Горизонтальный график
+      indexAxis: 'y',
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
